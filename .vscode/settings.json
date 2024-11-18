@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5442,
+            "driver": "PostgreSQL",
+            "name": "postgres",
+            "username": "unigaro",
+            "database": "hotel_db",
+            "password": "unigaro"
+        }
+    ]
+}

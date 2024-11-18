@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/libs/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+
+<body>
+    <div class="page">
+        {% include 'main/_header.html' %}
+        {% include 'main/_flash.html' %}
+        <main class="container">
+            <!-- <h1>{{ self.title() }}</h1> -->
+            {% block content %}{% endblock %}
+        </main>
+        {% include 'main/_footer.html' %}
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/libs/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script>
+</body>
+</html>

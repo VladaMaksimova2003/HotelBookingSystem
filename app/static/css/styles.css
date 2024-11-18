@@ -1,0 +1,153 @@
+@import url('fonts.css');
+
+body {
+    background: yellow;
+}
+
+/* .page {
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+} */
+
+.header {
+    position: sticky;
+    top: 0;
+    padding: 20px;
+}
+
+/* .content {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1 1 auto;
+} */
+
+h1 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+}
+
+.header__img {
+    display: block;
+    width: 48px;
+    height: 48px;
+}
+
+.dropdown-menu {
+    border: 1px solid #ccc;
+    background-color: white;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* Hitel_list */
+
+.universal-card .carousel-inner img {
+    width: 100%;       /* Полная ширина контейнера */
+    height: 250px;     /* Установите желаемую высоту */
+    object-fit: cover; /* Центрирует изображение и обрезает края */
+}
+
+.universal-card .card-body {
+    position: relative;
+    padding: 20px;
+    text-align: center;
+}
+
+.universal-card .carousel {
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.universal-card img {
+    object-fit: cover;
+    height: 100%;
+}
+
+/* Кнопка редактирования в левом верхнем углу */
+.edit-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Стили для карточки с фиксированным размером */
+.feature-card {
+    width: 200px;                      /* Фиксированная ширина карточки */
+    max-height: 450px;                  /* Максимальная высота карточки */
+    overflow-y: auto;                        /* Скрываем лишний контент */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;             /* Вертикальное расположение контента */
+    position: relative;
+}
+
+/* Текст в карточке (с ограничением по высоте и многоточием) */
+.feature-card .feature-text {
+    max-height: 50px;                  /* Ограничиваем высоту для текста */
+    overflow: hidden;                   /* Скрываем лишний текст */
+    text-overflow: ellipsis;            /* Добавляем многоточие, если текста больше */
+    line-height: 1.5rem;                /* Высота строки */
+    margin-bottom: 1rem;                /* Отступ снизу */
+    flex-grow: 1;
+}
+
+/* Блок с фичами, который будет подстраиваться */
+.feature-card .features {
+    overflow-y: auto;                   /* Прокрутка, если фичи не помещаются */
+    flex-grow: 1;                       /* Блок с фичами занимает доступное пространство */
+    max-height: 150px;                  /* Ограничиваем максимальную высоту блока с фичами */
+}
+
+/* Стили для размытия */
+.text-with-blur {
+    max-height: 100px;                      /* Ограничение по высоте для текста */
+    overflow: hidden;                       /* Скрываем лишний контент */
+    position: relative;                     /* Для позиционирования эффекта размытия */
+    line-height: 1.5rem;                    /* Высота строки */
+}
+
+/* Эффект размытия */
+.text-with-blur::after {
+    content: '';                            /* Псевдоэлемент для эффекта размытия */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;                           /* Высота области с размытием */
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.8)); /* Эффект размытия */
+}
+
+
+/* Блок с фичами, если контента слишком много */
+.feature-card .features::-webkit-scrollbar {
+    width: 8px;
+}
+
+.feature-card .features::-webkit-scrollbar-track {
+    background: #e9ecef;
+    border-radius: 10px;
+}
+
+.feature-card .features::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.feature-card .features::-webkit-scrollbar-thumb:hover {
+    background-color: #5a6268;
+}

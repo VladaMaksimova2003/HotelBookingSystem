@@ -1,0 +1,101 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<main>
+    <div class="py-5 text-center">
+        <h2>Add Room Type</h2>
+        <p class="lead">Please fill out the form below to add a new room type. All fields are required unless marked as optional.</p>
+    </div>
+
+    <div class="row g-5 justify-content-center">
+        <div class="col-md-7 col-lg-8">
+            <h4 class="mb-3 text-center">Room Type Information</h4>
+            <form id="room-type-form" method="POST" action="{{ url_for('room.add_room_type', hotel_id=hotel_id, features_data=features_data) }}" enctype="multipart/form-data"
+                class="needs-validation" novalidate="">
+
+                {{ form.hidden_tag() }}
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        {{ form.name.label }}
+                        {{ form.name(class="form-control", placeholder="Enter room type name") }}
+                    </div>
+
+                    <div class="col-md-12">
+                        {{ form.description.label }}
+                        {{ form.description(class="form-control", placeholder="Enter room type description") }}
+                    </div>
+
+                    <div class="col-md-12">
+                        {{ form.price.label }}
+                        {{ form.price(class="form-control", placeholder="Enter price per night") }}
+                    </div>
+
+                    <div class="col-md-12">
+                        {{ form.currency.label }}
+                        {{ form.currency(class="form-control", placeholder="Enter currency") }}
+                    </div>
+
+                    <div class="col-md-12">
+                        {{ form.photos.label }}
+                        {{ form.photos(class="form-control", multiple=True, accept="image/*") }}
+                        {% if form.photos.errors %}
+                        <div class="invalid-feedback" style="display: block!important;">
+                            {% for error in form.photos.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Amenities and Feature Types</label>
+
+                        <div id="feature-group-container">
+                            <datalist id="feature-types">
+                                {% for feature_type in features_data.keys() %}
+                                    <option value="{{ feature_type }}">{{ feature_type }}</option>
+                                {% endfor %}
+                            </datalist>
+
+                            {% for feature_form in form.features %}
+                            <div class="feature-group mb-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control feature-type-input"
+                                           placeholder="Enter feature type" list="feature-types" name="feature_type"
+                                           autocomplete="off" onchange="updateFeatures(this)">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                            onclick="addFeatureGroup()">+</button>
+                                </div>
+
+                                <div class="feature-input-container">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control feature-input"
+                                               placeholder="Enter feature" list="feature-values-{{ loop.index }}" name="feature_input"
+                                               autocomplete="off" oninput="updateFeatures(this)">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                                onclick="addExtraFeatureInput(this.closest('.feature-group'))">+</button>
+                                    </div>
+                                </div>
+
+                                <datalist id="feature-values-{{ loop.index }}"></datalist>
+                                <div id="feature-data-container" data-features='{{ features_data | tojson | safe }}'></div>
+
+                                <hr class="my-4">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Add Room Type</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</main>
+<script src="{{ url_for('static', filename='js/style/feature.js') }}"></script>
+
+{% endblock %}

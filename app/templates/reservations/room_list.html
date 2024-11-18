@@ -1,0 +1,144 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Список Комнат{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Фильтры</h4>
+            <form method="GET" action="{{ url_for('room.list_rooms', hotel_id=hotel_id) }}">
+                {{ filter_form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="room_name">Название типа комнаты</label>
+                    <input type="text" class="form-control" id="room_name" name="room_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="currency">Валюта</label>
+                    <select class="form-control" id="currency" name="currency">
+                        <option value="">Выберите валюту</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="RUB">RUB</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="min_price">Минимальная Цена</label>
+                    <input type="number" class="form-control" id="min_price" name="min_price" min="0" step="0.1">
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Типы удобств и удобства</label>
+                    <div id="feature-group-container">
+                        <datalist id="feature-types">
+                            {% for feature_type in features_data.keys() %}
+                            <option value="{{ feature_type }}">{{ feature_type }}</option>
+                            {% endfor %}
+                        </datalist>
+
+                        {% for feature_form in filter_form.features %}
+                        <div class="feature-group mb-3">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control feature-type-input"
+                                    placeholder="Введите тип удобства" list="feature-types" name="feature_type"
+                                    autocomplete="off" onchange="updateFeatures(this)">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="addFeatureGroup()">+</button>
+                            </div>
+
+                            <div class="feature-input-container">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control feature-input" placeholder="Введите удобство"
+                                        list="feature-values-{{ loop.index }}" name="feature_input" autocomplete="off"
+                                        oninput="updateFeatures(this)">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        onclick="addExtraFeatureInput(this.closest('.feature-group'))">+</button>
+                                </div>
+                            </div>
+
+                            <datalist id="feature-values-{{ loop.index }}"></datalist>
+                            <div id="feature-data-container" data-features='{{ features_data | tojson | safe }}'></div>
+
+                            <hr class="my-4">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <input type="hidden" name="features_json">
+                <button type="submit" class="btn btn-primary btn-lg">Применить Фильтры</button>
+            </form>
+        </div>
+
+        <div class="col-md-8">
+            <h4>Список Типов Комнат</h4>
+            <div class="list-group">
+                {% for room_type in room_types %}
+                <div class="d-flex mb-4">
+                    <!-- Карточка типа комнаты -->
+                    <div class="card universal-card flex-grow-1 me-3" style="max-width: 300px;">
+                        <div class="card-body">
+                            <a href="{{ url_for('room.edit_room_type', room_type_id=room_type.id) }}"
+                                class="btn btn-sm btn-outline-secondary edit-btn" title="Редактировать">Edit</a>
+                            <a href="#" class="text-decoration-none text-dark">
+                                <h5 class="card-title">{{ room_type.name }}</h5>
+                                <p class="card-text text-with-blur">{{ room_type.description }}</p>
+                                <small class="text-muted">Цена: {{ room_type.price }} {{ room_type.currency }}</small>
+                            </a>
+                        </div>
+
+                        <!-- Карусель фотографий для текущего отеля -->
+                        <div id="carousel{{ room_type.id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for photo in room_type_photos_dict[room_type.id] %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <img src="{{ url_for('static', filename='uploads/rooms/' ~ room_type.id ~ '/' ~ photo.url) }}"
+                                        class="d-block w-100" alt="Фото отеля {{ room_type.name }}">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                data-bs-target="#carousel{{ room_type.id }}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                data-bs-target="#carousel{{ room_type.id }}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Блок удобств с прокруткой -->
+                    <div class="card feature-card" style="max-width: 200px;">
+                        <h6>Удобства:</h6>
+                        <ul class="list-unstyled">
+                            {% if room_type.id in room_type_features_dict %}
+                            {% for type_name, features in room_type_features_dict[room_type.id].items() %}
+                            <li>
+                                <strong>{{ type_name }}:</strong>
+                                <ul class="ps-3">
+                                    {% for feature in features %}
+                                    <li>{{ feature }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                            {% else %}
+                            <p>No features available for this room type.</p>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/style/feature.js') }}"></script>
+{% endblock %}
